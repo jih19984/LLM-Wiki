@@ -7,6 +7,7 @@ tags: []
 created: {{date}}
 updated: {{date}}
 related: []
+relationships: []
 ---
 
 # {{title}}

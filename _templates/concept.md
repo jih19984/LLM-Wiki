@@ -8,6 +8,7 @@ created: {{date}}
 updated: {{date}}
 sources: []
 related: []
+relationships: []
 ---
 
 # {{title}}

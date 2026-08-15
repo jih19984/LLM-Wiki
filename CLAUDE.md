@@ -52,6 +52,8 @@ CLAUDE.md            이 문서
 | `created` / `updated` | YYYY-MM-DD | `updated`는 내용을 바꿀 때마다 갱신 |
 | `sources` | list | 참고한 자료 (URL, 책, 노트 등) |
 | `related` | list of `[[wikilink]]` | 관련 노트. 양방향 연결을 지향 |
+| `relationships` | list of `{type, target}` | 타입이 있는 관계. 예: `{type: depends_on, target: "[[Redis]]"}`. `/tag`가 채운다 |
+| `ingested` | boolean | `01-working-memory/` 노트 전용. `true`면 `/ingest`가 이미 처리했다는 뜻 — 중복 처리 방지 |
 
 ## 워크플로우
 
@@ -76,6 +78,14 @@ CLAUDE.md            이 문서
 ### Crystallization — 세션/탐구 결과를 위키로 편입
 대화에서 의미 있는 결론(디버깅 해결, 개념 정리, 코드 패턴)이 나오면 세션 끝에 아래 형태로 요약해 파일링을 제안한다:
 - 질문/문제 → 발견/결론 → 관련 파일·노트 → 위키에 남길 semantic 후보
+
+## 슬래시 커맨드
+
+아래 워크플로우를 사람이 직접 요청할 수 있도록 스킬로 만들어뒀다. 각 스킬의 세부 절차는 `.claude/skills/<name>/SKILL.md`에 있고, 여기 워크플로우 섹션과 어긋나지 않게 유지한다.
+
+- `/ingest` — `01-working-memory`의 미처리 캡처를 엔티티 추출 + 웹 검색 팩트체크 + 신뢰도 평가와 함께 `03-semantic`으로 승격. 처리 완료된 원본은 `ingested: true`로 표시.
+- `/tag` — 파일 위치·본문은 안 건드리고, `tags`와 타입 있는 `relationships`만 보강.
+- `/lint` — `01-working-memory`를 제외한 볼트 전체를 점검. 고아 노트·누락 태그·깨진 링크 리포트, 깨진 링크는 애매하지 않으면 자동 복구, 상충 정보는 병합안만 제안(자동 덮어쓰기 금지).
 
 ## MOC 사용 규칙
 
